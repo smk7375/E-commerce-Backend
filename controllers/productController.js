@@ -1,10 +1,10 @@
-import { Product } from '../models';
+import { Product } from '../models/index.js';
 import multer from 'multer';
 import path from 'path';
-import CustomErrorHandler from '../services/CustomErrorHandler';
+import CustomErrorHandler from '../services/CustomErrorHandler.js';
 import fs from 'fs';
 import Joi from 'joi';
-import productSchema from '../validators/productValidator';
+import productSchema from '../validators/productValidator.js';
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => cb(null, 'uploads/'),
@@ -29,7 +29,8 @@ const productController = {
             if (err) {
                 return next(CustomErrorHandler.serverError(err.message));
             }
-            const filePath = req.file.path;
+            const filePath = req.file.path; // req.file is available because of multer middleware
+
             // validation
             const { error } = productSchema.validate(req.body);
             if (error) {
@@ -108,15 +109,16 @@ const productController = {
             res.status(201).json(document);
         });
     },
+
+    // Delete product
     async destroy(req, res, next) {
         const document = await Product.findOneAndRemove({ _id: req.params.id });
         if (!document) {
             return next(new Error('Nothing to delete'));
         }
         // image delete
-        const imagePath = document._doc.image;
-        // http://localhost:5000/uploads/1616444052539-425006577.png
-        // approot/http://localhost:5000/uploads/1616444052539-425006577.png
+        const imagePath = document._doc.image; // _doc is used to access the document's raw data
+        // appRoot/uploads/1616444052539-425006577.png
         fs.unlink(`${appRoot}/${imagePath}`, (err) => {
             if (err) {
                 return next(CustomErrorHandler.serverError());
@@ -124,6 +126,8 @@ const productController = {
             return res.json(document);
         });
     },
+
+    // List all products
     async index(req, res, next) {
         let documents;
         // pagination mongoose-pagination
@@ -136,6 +140,8 @@ const productController = {
         }
         return res.json(documents);
     },
+
+    // Show single product
     async show(req, res, next) {
         let document;
         try {
@@ -147,6 +153,8 @@ const productController = {
         }
         return res.json(document);
     },
+
+    // Get products by ids
     async getProducts(req, res, next) {
         let documents;
         try {

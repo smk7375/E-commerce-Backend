@@ -1,8 +1,8 @@
 import Joi from 'joi';
-import { REFRESH_SECRET } from '../../config';
-import { RefreshToken, User } from '../../models';
-import CustomErrorHandler from '../../services/CustomErrorHandler';
-import JwtService from '../../services/JwtService';
+import { REFRESH_SECRET } from '../../config/index.js';
+import { RefreshToken, User } from '../../models/index.js';
+import CustomErrorHandler from '../../services/CustomErrorHandler.js';
+import JwtService from '../../services/JwtService.js';
 
 const refreshController = {
     async refresh(req, res, next) {

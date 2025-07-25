@@ -1,9 +1,9 @@
 import Joi from 'joi';
-import { User, RefreshToken } from '../../models';
-import CustomErrorHandler from '../../services/CustomErrorHandler';
+import { User, RefreshToken } from '../../models/index.js';
+import CustomErrorHandler from '../../services/CustomErrorHandler.js';
 import bcrypt from 'bcrypt';
-import JwtService from '../../services/JwtService';
-import { REFRESH_SECRET } from '../../config';
+import JwtService from '../../services/JwtService.js';
+import { REFRESH_SECRET } from '../../config/index.js';
 
 const loginController = {
     async login(req, res, next) {
